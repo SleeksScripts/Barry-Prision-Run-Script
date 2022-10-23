@@ -1,0 +1,201 @@
+-- Barry Prison Run Script Made By VIPER
+-- Join The Discord https://discord.gg/ZjnMetfUDN
+
+
+local lib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/Vape.txt")()
+
+local win = lib:Window("Barry Prison Run Script ┃ By VIPER",Color3.fromRGB(44, 120, 224), Enum.KeyCode.RightControl)
+
+local tab = win:Tab("Main")
+
+tab:Button("Get All VIP Tools", function()
+        getgenv().getAll = true
+            getAll()
+end)
+
+
+tab:Button("Auto Win", function()
+    getgenv().autoWin = true
+    autoWin()
+end)
+
+
+
+local Misc = win:Tab("Misc")
+
+
+
+
+    Misc:Slider("Walkspeed",0,500,30, function(t)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
+        end)
+
+
+
+        Misc:Button("Fly", function()
+            getgenv().fly = true
+            fly()
+end)
+
+
+        
+        Misc:Button("No Clip On", function()
+                getgenv().noClip = true
+                    noClip()
+    end)
+
+            
+
+    Misc:Bind("Destroy GUI",Enum.KeyCode.RightShift, function()
+        game:GetService("CoreGui").ui:Destroy()
+        end)
+    
+
+
+
+
+function autoWin()
+    if getgenv().autoWin == true then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-3860.36597, 1097.80566, -569.259338, 0.286052048, 1.97863521e-08, 0.958214104, -3.03623793e-08, 1, -1.15852306e-08, -0.958214104, -2.57796806e-08, 0.286052048)
+    end
+end
+
+
+
+
+function getAll()
+    if getgenv().getAll == true then
+        
+for i,v in pairs(game:GetService("ReplicatedStorage").ItemModels.VipRemotes:GetChildren()) do
+    game:GetService("ReplicatedStorage").ItemModels.VipRemotes[v.Name]:FireServer()
+end
+end
+    end
+
+function noClip()
+    if getgenv().noClip == true then
+        local runservice = game:GetService("RunService")
+        local player = game:GetService("Players").LocalPlayer
+
+
+        runservice.Stepped:Connect(function()
+    for i,v in pairs(player.Character:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.CanCollide = false
+        end
+    end
+end)
+    end
+end
+
+
+
+
+function fly()
+    if getgenv().fly == true then
+        repeat
+            wait()
+        until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and
+            game.Players.LocalPlayer.Character:findFirstChild("HumanoidRootPart") and
+            game.Players.LocalPlayer.Character:findFirstChild("Humanoid")
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        repeat
+            wait()
+        until mouse
+        local plr = game.Players.LocalPlayer
+        local torso = plr.Character.HumanoidRootPart
+        local flying = true
+        local deb = true
+        local ctrl = {f = 0, b = 0, l = 0, r = 0}
+        local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+        local maxspeed = 500
+        local speed = 0
+
+        function Fly()
+            local bg = Instance.new("BodyGyro", torso)
+            bg.P = 9e4
+            bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+            bg.cframe = torso.CFrame
+            local bv = Instance.new("BodyVelocity", torso)
+            bv.velocity = Vector3.new(0, 0.1, 0)
+            bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+            repeat
+                wait()
+                plr.Character.Humanoid.PlatformStand = true
+                if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
+                    speed = speed + .5 + (speed / maxspeed)
+                    if speed > maxspeed then
+                        speed = maxspeed
+                    end
+                elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
+                    speed = speed - 1
+                    if speed < 0 then
+                        speed = 0
+                    end
+                end
+                if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+                    bv.velocity =
+                        ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f + ctrl.b)) +
+                        ((game.Workspace.CurrentCamera.CoordinateFrame *
+                            CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * .2, 0).p) -
+                            game.Workspace.CurrentCamera.CoordinateFrame.p)) *
+                        speed
+                    lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+                elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
+                    bv.velocity =
+                        ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f + lastctrl.b)) +
+                        ((game.Workspace.CurrentCamera.CoordinateFrame *
+                            CFrame.new(lastctrl.l + lastctrl.r, (lastctrl.f + lastctrl.b) * .2, 0).p) -
+                            game.Workspace.CurrentCamera.CoordinateFrame.p)) *
+                        speed
+                else
+                    bv.velocity = Vector3.new(0, 0.1, 0)
+                end
+                bg.cframe =
+                    game.Workspace.CurrentCamera.CoordinateFrame *
+                    CFrame.Angles(-math.rad((ctrl.f + ctrl.b) * 50 * speed / maxspeed), 0, 0)
+            until not flying
+            ctrl = {f = 0, b = 0, l = 0, r = 0}
+            lastctrl = {f = 0, b = 0, l = 0, r = 0}
+            speed = 0
+            bg:Destroy()
+            bv:Destroy()
+            plr.Character.Humanoid.PlatformStand = false
+        end
+        mouse.KeyDown:connect(
+            function(key)
+                if key:lower() == "p" then
+                    if flying then
+                        flying = false
+                    else
+                        flying = true
+                        Fly()
+                    end
+                elseif key:lower() == "w" then
+                    ctrl.f = 1
+                elseif key:lower() == "s" then
+                    ctrl.b = -1
+                elseif key:lower() == "a" then
+                    ctrl.l = -1
+                elseif key:lower() == "d" then
+                    ctrl.r = 1
+                end
+            end
+        )
+        mouse.KeyUp:connect(
+            function(key)
+                if key:lower() == "w" then
+                    ctrl.f = 0
+                elseif key:lower() == "s" then
+                    ctrl.b = 0
+                elseif key:lower() == "a" then
+                    ctrl.l = 0
+                elseif key:lower() == "d" then
+                    ctrl.r = 0
+                end
+            end
+        )
+        Fly()
+    end
+end
+
