@@ -4,11 +4,13 @@
 
 local lib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/Vape.txt")()
 
+
+
 local win = lib:Window("Barry Prison Run Script ┃ By VIPER",Color3.fromRGB(44, 120, 224), Enum.KeyCode.RightControl)
 
 local tab = win:Tab("Main")
 
-tab:Button("Get All VIP Tools", function()
+tab:Button("Get All Tools", function()
         getgenv().getAll = true
             getAll()
 end)
